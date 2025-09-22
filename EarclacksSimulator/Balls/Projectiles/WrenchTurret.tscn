@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://b26lsa34a7c26"]
+
+[ext_resource type="Script" uid="uid://dr65jxnbg175q" path="res://Balls/Projectiles/WrenchTurret.gd" id="1_6yd61"]
+[ext_resource type="Texture2D" uid="uid://dvuum2ddcphrb" path="res://Sprites/WrenchTurret.png" id="1_43f84"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w5c7y"]
+radius = 158.152
+
+[node name="WrenchTurret" type="StaticBody2D" groups=["Walls"]]
+z_index = -5
+scale = Vector2(0.1, 0.1)
+script = ExtResource("1_6yd61")
+
+[node name="WrenchTurret" type="Sprite2D" parent="."]
+position = Vector2(167, -61)
+texture = ExtResource("1_43f84")
+offset = Vector2(-93, 61)
+region_enabled = true
+region_rect = Rect2(37.3181, 21.97, 476.171, 327.117)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_w5c7y")
+
+[node name="BulletStart" type="Marker2D" parent="."]
+position = Vector2(259, 0)
+
+[node name="BulletFacing" type="Marker2D" parent="."]
+position = Vector2(307, 0)
+
+[node name="ShootCooldown" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="DecayTimer" type="Timer" parent="."]
+wait_time = 30.0
+
+[connection signal="timeout" from="ShootCooldown" to="." method="_on_shoot_cooldown_timeout"]
+[connection signal="timeout" from="DecayTimer" to="." method="_on_decay_timer_timeout"]

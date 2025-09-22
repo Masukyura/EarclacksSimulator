@@ -1,0 +1,328 @@
+[gd_scene load_steps=13 format=3 uid="uid://raajbc0b3nu4"]
+
+[ext_resource type="Texture2D" uid="uid://dwxsopuk8t4wi" path="res://Sprites/Map.webp" id="1_7n0h0"]
+[ext_resource type="Script" uid="uid://ci2c81n77o2vx" path="res://Maps/Map.gd" id="1_pggqf"]
+[ext_resource type="FontFile" uid="uid://d3qgkvd507epq" path="res://Fonts/Anton-Regular.ttf" id="5_pggqf"]
+[ext_resource type="Texture2D" uid="uid://bqwx3hjppak6s" path="res://Sprites/Sword.png" id="6_fqgbb"]
+[ext_resource type="AudioStream" uid="uid://cvx77t6i6qe8g" path="res://Sounds/BallHitWall.mp3" id="7_fqgbb"]
+[ext_resource type="Texture2D" uid="uid://c1pe10v48psyw" path="res://Sprites/Hammer.png" id="8_bngj0"]
+[ext_resource type="Texture2D" uid="uid://cgaq8ljsafxxd" path="res://Sprites/Spear.png" id="9_7wxdy"]
+[ext_resource type="AudioStream" uid="uid://djol0x2fx3urm" path="res://Sounds/BallDieDink.mp3" id="9_bngj0"]
+[ext_resource type="AudioStream" uid="uid://b12n4ev0qxlf7" path="res://Sounds/Bg.mp3" id="10_7wxdy"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3vi7k"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gfjgm"]
+size = Vector2(196.021, 54.1941)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5my4x"]
+size = Vector2(196.021, 2.88461)
+
+[node name="Map" type="Node2D"]
+script = ExtResource("1_pggqf")
+
+[node name="Camera" type="Camera2D" parent="."]
+
+[node name="Map" type="Sprite2D" parent="."]
+z_index = -4096
+z_as_relative = false
+scale = Vector2(2.60176, 2.60176)
+texture = ExtResource("1_7n0h0")
+region_enabled = true
+region_rect = Rect2(30.115, 29.9661, 199.618, 200.262)
+
+[node name="Floor" type="StaticBody2D" parent="Map" groups=["Walls"]]
+scale = Vector2(1, 1.00363)
+collision_priority = 100000.0
+physics_material_override = SubResource("PhysicsMaterial_3vi7k")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Map/Floor"]
+position = Vector2(2.69049, 122.033)
+shape = SubResource("RectangleShape2D_gfjgm")
+
+[node name="Walls" type="StaticBody2D" parent="Map" groups=["Walls"]]
+scale = Vector2(1, 1.00363)
+collision_priority = 100000.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/Walls"]
+position = Vector2(-1.15307, -123.378)
+shape = SubResource("RectangleShape2D_gfjgm")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Map/Walls"]
+position = Vector2(-121.841, 0.384355)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_gfjgm")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Map/Walls"]
+position = Vector2(121.841, -1.15307)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_gfjgm")
+
+[node name="HudTest" type="Node2D" parent="."]
+z_index = -1
+
+[node name="WeaponLabel1" type="Control" parent="HudTest"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -846.0
+offset_top = 55.0
+offset_right = -806.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WeaponName" type="Label" parent="HudTest/WeaponLabel1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 312.0
+offset_top = -255.0
+offset_right = 505.0
+offset_bottom = -167.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.960784, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 50
+text = "Sword"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponStats1" type="Label" parent="HudTest/WeaponLabel1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 311.0
+offset_top = -187.0
+offset_right = 504.0
+offset_bottom = -99.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 28
+text = "Damage: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponStats2" type="Label" parent="HudTest/WeaponLabel1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 311.0
+offset_top = -134.0
+offset_right = 504.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 28
+text = "Damage: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponStats3" type="Label" parent="HudTest/WeaponLabel1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 311.0
+offset_top = -81.0
+offset_right = 504.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 28
+text = "Damage: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponLabel2" type="Control" parent="HudTest"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = 55.0
+offset_right = 20.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WeaponName" type="Label" parent="HudTest/WeaponLabel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 312.0
+offset_top = -255.0
+offset_right = 505.0
+offset_bottom = -167.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 50
+text = "Sword"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponStats1" type="Label" parent="HudTest/WeaponLabel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 311.0
+offset_top = -187.0
+offset_right = 504.0
+offset_bottom = -99.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 28
+text = "Damage: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponStats2" type="Label" parent="HudTest/WeaponLabel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 311.0
+offset_top = -134.0
+offset_right = 504.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 28
+text = "Damage: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponStats3" type="Label" parent="HudTest/WeaponLabel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 311.0
+offset_top = -81.0
+offset_right = 504.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 28
+text = "Damage: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonControl" type="Control" parent="HudTest"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="2x Button" type="Button" parent="HudTest/ButtonControl"]
+layout_mode = 0
+offset_left = 510.0
+offset_top = 259.0
+offset_right = 564.0
+offset_bottom = 313.0
+theme_override_fonts/font = ExtResource("5_pggqf")
+theme_override_font_sizes/font_size = 30
+toggle_mode = true
+text = "2x"
+
+[node name="BounceWallSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_fqgbb")
+volume_db = -5.0
+
+[node name="BallSoundDetector" type="Area2D" parent="."]
+scale = Vector2(2.6, 2.6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallSoundDetector"]
+position = Vector2(-0.384615, -96.6827)
+shape = SubResource("RectangleShape2D_5my4x")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="BallSoundDetector"]
+position = Vector2(1.53846, 97.9808)
+shape = SubResource("RectangleShape2D_5my4x")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="BallSoundDetector"]
+position = Vector2(-98.75, 0.384605)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_5my4x")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="BallSoundDetector"]
+position = Vector2(95.5769, 0.384616)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_5my4x")
+
+[node name="Sword" type="Sprite2D" parent="."]
+position = Vector2(2340, -1705)
+texture = ExtResource("6_fqgbb")
+
+[node name="Hammer" type="Sprite2D" parent="."]
+position = Vector2(4622, -2155)
+scale = Vector2(7.68437, 7.68437)
+texture = ExtResource("8_bngj0")
+
+[node name="Spear" type="Sprite2D" parent="."]
+position = Vector2(6024, -1602)
+scale = Vector2(1.49448, 1.49448)
+texture = ExtResource("9_7wxdy")
+
+[node name="BGMusic" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("10_7wxdy")
+autoplay = true
+
+[node name="BallDieDink" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_bngj0")
+
+[connection signal="body_entered" from="BallSoundDetector" to="." method="_on_ball_sound_detector_body_entered"]

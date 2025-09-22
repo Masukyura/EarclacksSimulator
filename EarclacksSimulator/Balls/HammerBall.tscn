@@ -1,0 +1,128 @@
+[gd_scene load_steps=16 format=3 uid="uid://ddv1mobgtkq5j"]
+
+[ext_resource type="Script" uid="uid://dpelkm0hbmo5j" path="res://Balls/Code/HammerBall.gd" id="1_2jw40"]
+[ext_resource type="Texture2D" uid="uid://c5mo5j6sgmqm0" path="res://Sprites/BallSprites/BallDamage.png" id="2_p8w35"]
+[ext_resource type="Texture2D" uid="uid://dd1yw36xyxbtg" path="res://Sprites/BallSprites/BattleBall.webp" id="3_xiolo"]
+[ext_resource type="FontFile" uid="uid://d3qgkvd507epq" path="res://Fonts/Anton-Regular.ttf" id="4_jbx5q"]
+[ext_resource type="Texture2D" uid="uid://c1pe10v48psyw" path="res://Sprites/Hammer.png" id="5_bre8l"]
+[ext_resource type="AudioStream" uid="uid://da086qn1aw0yv" path="res://Sounds/HammerHit.mp3" id="6_2h6ue"]
+[ext_resource type="AudioStream" uid="uid://cvx77t6i6qe8g" path="res://Sounds/BallHitWall.mp3" id="7_vewcl"]
+[ext_resource type="AudioStream" uid="uid://dlh0jymkehy5p" path="res://Sounds/HammerMaxSwingSound.mp3" id="7_xiolo"]
+[ext_resource type="AudioStream" uid="uid://crr7t30a8stjd" path="res://Sounds/WeaponHitSound.mp3" id="8_ewbu1"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ef5o4"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_frqit"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_p8w35")
+}],
+"loop": true,
+"name": &"Damaged",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_xiolo")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ueo7"]
+radius = 38.0132
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ef5o4"]
+radius = 39.0128
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gh363"]
+size = Vector2(16.2635, 58.0833)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_evslu"]
+size = Vector2(50.9117, 33.9411)
+
+[node name="HammerBall" type="RigidBody2D" groups=["Balls"]]
+mass = 0.2
+physics_material_override = SubResource("PhysicsMaterial_ef5o4")
+lock_rotation = true
+script = ExtResource("1_2jw40")
+
+[node name="Ball" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(0.175, 0.175)
+sprite_frames = SubResource("SpriteFrames_frqit")
+animation = &"Normal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2ueo7")
+
+[node name="ColisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ColisionDetector"]
+shape = SubResource("CircleShape2D_ef5o4")
+
+[node name="HP" type="Node2D" parent="."]
+scale = Vector2(0.1, 0.1)
+
+[node name="Label" type="Label" parent="HP"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -171.0
+offset_top = -204.5
+offset_right = 171.0
+offset_bottom = 204.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_jbx5q")
+theme_override_font_sizes/font_size = 400
+text = "25"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="HammerWeaponDetector" type="Area2D" parent="." groups=["Weapon"]]
+
+[node name="Hammer" type="Sprite2D" parent="HammerWeaponDetector"]
+z_index = -1
+position = Vector2(27, -22)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("5_bre8l")
+offset = Vector2(125, -125)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HammerWeaponDetector"]
+position = Vector2(48.7145, -44.2145)
+rotation = 0.785398
+shape = SubResource("RectangleShape2D_gh363")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="HammerWeaponDetector"]
+position = Vector2(81.5, -76.5)
+rotation = 0.785398
+shape = SubResource("RectangleShape2D_evslu")
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_2h6ue")
+volume_db = 10.0
+
+[node name="SwingSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_xiolo")
+volume_db = 10.0
+
+[node name="HitOtherBall" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_vewcl")
+pitch_scale = 0.7
+
+[node name="ParrySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_ewbu1")
+pitch_scale = 1.25
+
+[connection signal="area_entered" from="ColisionDetector" to="." method="_on_colision_detector_area_entered"]
+[connection signal="body_entered" from="ColisionDetector" to="." method="_on_colision_detector_body_entered"]
+[connection signal="area_entered" from="HammerWeaponDetector" to="." method="_on_hammer_weapon_detector_area_entered"]
+[connection signal="body_entered" from="HammerWeaponDetector" to="." method="_on_hammer_weapon_detector_body_entered"]

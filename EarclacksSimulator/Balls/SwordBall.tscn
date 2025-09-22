@@ -1,0 +1,114 @@
+[gd_scene load_steps=14 format=3 uid="uid://dumftot5reg50"]
+
+[ext_resource type="Script" uid="uid://cvhi2ads6efof" path="res://Balls/Code/SwordBall.gd" id="1_ef5o4"]
+[ext_resource type="Texture2D" uid="uid://c5mo5j6sgmqm0" path="res://Sprites/BallSprites/BallDamage.png" id="2_f1ssb"]
+[ext_resource type="Texture2D" uid="uid://bqwx3hjppak6s" path="res://Sprites/Sword.png" id="3_2b7jw"]
+[ext_resource type="Texture2D" uid="uid://dd1yw36xyxbtg" path="res://Sprites/BallSprites/BattleBall.webp" id="3_x7fv0"]
+[ext_resource type="FontFile" uid="uid://d3qgkvd507epq" path="res://Fonts/Anton-Regular.ttf" id="4_frqit"]
+[ext_resource type="AudioStream" uid="uid://bi0mf5f1oiro8" path="res://Sounds/SwordHit.mp3" id="6_msdhs"]
+[ext_resource type="AudioStream" uid="uid://cvx77t6i6qe8g" path="res://Sounds/BallHitWall.mp3" id="7_i3x0k"]
+[ext_resource type="AudioStream" uid="uid://crr7t30a8stjd" path="res://Sounds/WeaponHitSound.mp3" id="8_x7fv0"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ef5o4"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_frqit"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_f1ssb")
+}],
+"loop": true,
+"name": &"Damaged",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_x7fv0")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ueo7"]
+radius = 38.0132
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ef5o4"]
+radius = 39.0128
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x7fv0"]
+size = Vector2(28.3848, 92.0244)
+
+[node name="SwordBall" type="RigidBody2D" groups=["Balls"]]
+mass = 0.2
+physics_material_override = SubResource("PhysicsMaterial_ef5o4")
+lock_rotation = true
+script = ExtResource("1_ef5o4")
+
+[node name="Ball" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(0.175, 0.175)
+sprite_frames = SubResource("SpriteFrames_frqit")
+animation = &"Normal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2ueo7")
+
+[node name="ColisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ColisionDetector"]
+shape = SubResource("CircleShape2D_ef5o4")
+
+[node name="HP" type="Node2D" parent="."]
+scale = Vector2(0.1, 0.1)
+
+[node name="Label" type="Label" parent="HP"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -171.0
+offset_top = -204.5
+offset_right = 171.0
+offset_bottom = 204.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_frqit")
+theme_override_font_sizes/font_size = 400
+text = "25"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="SwordWeaponDetector" type="Area2D" parent="." groups=["Weapon"]]
+
+[node name="Sword" type="Sprite2D" parent="SwordWeaponDetector"]
+z_index = -1
+position = Vector2(1.23278, -1.0711)
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("3_2b7jw")
+offset = Vector2(742.707, -716.647)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordWeaponDetector"]
+position = Vector2(58, -56)
+rotation = 0.785398
+shape = SubResource("RectangleShape2D_x7fv0")
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_msdhs")
+
+[node name="HitOtherBall" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_i3x0k")
+pitch_scale = 0.7
+
+[node name="ParrySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_x7fv0")
+pitch_scale = 1.25
+
+[connection signal="area_entered" from="ColisionDetector" to="." method="_on_colision_detector_area_entered"]
+[connection signal="body_entered" from="ColisionDetector" to="." method="_on_colision_detector_body_entered"]
+[connection signal="area_entered" from="SwordWeaponDetector" to="." method="_on_sword_weapon_detector_area_entered"]
+[connection signal="body_entered" from="SwordWeaponDetector" to="." method="_on_sword_weapon_detector_body_entered"]

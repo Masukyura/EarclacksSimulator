@@ -1,0 +1,118 @@
+[gd_scene load_steps=14 format=3 uid="uid://k08n1yg0eg7w"]
+
+[ext_resource type="Script" uid="uid://bee8npnbhsqsu" path="res://Balls/Code/WrenchBall.gd" id="1_geexc"]
+[ext_resource type="Texture2D" uid="uid://c5mo5j6sgmqm0" path="res://Sprites/BallSprites/BallDamage.png" id="2_muskr"]
+[ext_resource type="Texture2D" uid="uid://dd1yw36xyxbtg" path="res://Sprites/BallSprites/BattleBall.webp" id="3_ymn5j"]
+[ext_resource type="FontFile" uid="uid://d3qgkvd507epq" path="res://Fonts/Anton-Regular.ttf" id="4_kwmx4"]
+[ext_resource type="Texture2D" uid="uid://bopdhskpfwruy" path="res://Sprites/Wrench.png" id="5_am1w6"]
+[ext_resource type="AudioStream" uid="uid://c4tlfnjw4ugtb" path="res://Sounds/WrenchSound.wav" id="6_ymn5j"]
+[ext_resource type="AudioStream" uid="uid://cvx77t6i6qe8g" path="res://Sounds/BallHitWall.mp3" id="7_2o810"]
+[ext_resource type="AudioStream" uid="uid://crr7t30a8stjd" path="res://Sounds/WeaponHitSound.mp3" id="8_vsynh"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ef5o4"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_frqit"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_muskr")
+}],
+"loop": true,
+"name": &"Damaged",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ymn5j")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ueo7"]
+radius = 38.0132
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ef5o4"]
+radius = 39.0128
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_ujbsm"]
+points = PackedVector2Array(-19, 29, 15, -2, 14, -19, 32, -27, 56, -2, 49, 12, 28, 14, -2, 45)
+
+[node name="WrenchBall" type="RigidBody2D" groups=["Balls"]]
+mass = 0.2
+physics_material_override = SubResource("PhysicsMaterial_ef5o4")
+lock_rotation = true
+script = ExtResource("1_geexc")
+
+[node name="Ball" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(0.175, 0.175)
+sprite_frames = SubResource("SpriteFrames_frqit")
+animation = &"Normal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2ueo7")
+
+[node name="ColisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ColisionDetector"]
+shape = SubResource("CircleShape2D_ef5o4")
+
+[node name="HP" type="Node2D" parent="."]
+scale = Vector2(0.1, 0.1)
+
+[node name="Label" type="Label" parent="HP"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -171.0
+offset_top = -204.5
+offset_right = 171.0
+offset_bottom = 204.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_kwmx4")
+theme_override_font_sizes/font_size = 400
+text = "25"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="WrenchWeaponDetector" type="Area2D" parent="." groups=["Weapon"]]
+
+[node name="Wrench" type="Sprite2D" parent="WrenchWeaponDetector"]
+z_index = -1
+position = Vector2(-675, 649)
+scale = Vector2(0.983034, 0.983034)
+texture = ExtResource("5_am1w6")
+offset = Vector2(742.707, -716.647)
+flip_h = true
+
+[node name="TurretLocation" type="Marker2D" parent="WrenchWeaponDetector"]
+position = Vector2(75, -75)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WrenchWeaponDetector"]
+position = Vector2(36, -64)
+shape = SubResource("ConvexPolygonShape2D_ujbsm")
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ymn5j")
+volume_db = 10.0
+
+[node name="HitOtherBall" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_2o810")
+pitch_scale = 0.7
+
+[node name="ParrySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_vsynh")
+pitch_scale = 1.25
+
+[connection signal="area_entered" from="ColisionDetector" to="." method="_on_colision_detector_area_entered"]
+[connection signal="body_entered" from="ColisionDetector" to="." method="_on_colision_detector_body_entered"]
+[connection signal="area_entered" from="WrenchWeaponDetector" to="." method="_on_wrench_weapon_detector_area_entered"]
+[connection signal="body_entered" from="WrenchWeaponDetector" to="." method="_on_wrench_weapon_detector_body_entered"]

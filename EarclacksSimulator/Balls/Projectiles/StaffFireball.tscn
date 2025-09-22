@@ -1,0 +1,122 @@
+[gd_scene load_steps=17 format=3 uid="uid://bo3d0fyh5wjoy"]
+
+[ext_resource type="Script" uid="uid://c82bo4a0dmx13" path="res://Balls/Projectiles/StaffFireball.gd" id="1_7nq3f"]
+[ext_resource type="Texture2D" uid="uid://bg7l5431r0h6r" path="res://Sprites/fireball.png" id="1_umm0f"]
+[ext_resource type="Texture2D" uid="uid://4ve4g5yqbkp4" path="res://Sprites/ExplosionRadius.png" id="3_sljff"]
+[ext_resource type="AudioStream" uid="uid://c0kbxd44y7vcx" path="res://Sounds/StaffFireballSound.mp3" id="4_mo6p2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7nq3f"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(0, 0, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sljff"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(1200, 0, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mo6p2"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(2400, 0, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3gty"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(3600, 0, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ywdwl"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(4800, 0, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7q12g"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(0, 1125, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oe4v3"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(1200, 1125, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hdpf8"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(2400, 1125, 1200, 1125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yym24"]
+atlas = ExtResource("1_umm0f")
+region = Rect2(3600, 1125, 1200, 1125)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ywdwl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7nq3f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sljff")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mo6p2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3gty")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ywdwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7q12g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oe4v3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hdpf8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yym24")
+}],
+"loop": true,
+"name": &"Fireball",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7nq3f"]
+radius = 21.0
+height = 64.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sljff"]
+radius = 132.004
+
+[node name="Fireball" type="Node2D"]
+script = ExtResource("1_7nq3f")
+
+[node name="FireballSprite" type="AnimatedSprite2D" parent="."]
+z_index = -1
+position = Vector2(-3.05176e-05, -3.05176e-05)
+rotation = 3.14159
+scale = Vector2(0.075, 0.075)
+sprite_frames = SubResource("SpriteFrames_ywdwl")
+animation = &"Fireball"
+
+[node name="FireballColision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FireballColision"]
+position = Vector2(14, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_7nq3f")
+
+[node name="ExplosionDetector" type="Area2D" parent="."]
+
+[node name="ScaleFactor" type="Node2D" parent="ExplosionDetector"]
+
+[node name="ExplosionRadius" type="Sprite2D" parent="ExplosionDetector/ScaleFactor"]
+scale = Vector2(0.225, 0.225)
+texture = ExtResource("3_sljff")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplosionDetector"]
+rotation = 1.5708
+shape = SubResource("CircleShape2D_sljff")
+
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_mo6p2")
+volume_db = 15.0
+
+[connection signal="body_entered" from="FireballColision" to="." method="_on_fireball_colision_body_entered"]
+[connection signal="body_entered" from="ExplosionDetector" to="." method="_on_explosion_detector_body_entered"]
+[connection signal="body_exited" from="ExplosionDetector" to="." method="_on_explosion_detector_body_exited"]

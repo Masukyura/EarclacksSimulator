@@ -1,0 +1,114 @@
+[gd_scene load_steps=14 format=3 uid="uid://iu1dg6c5ukl7"]
+
+[ext_resource type="Script" uid="uid://c8ty6n0afihmg" path="res://Balls/Code/SpearBall.gd" id="1_5sbwv"]
+[ext_resource type="Texture2D" uid="uid://c5mo5j6sgmqm0" path="res://Sprites/BallSprites/BallDamage.png" id="2_qebag"]
+[ext_resource type="Texture2D" uid="uid://dd1yw36xyxbtg" path="res://Sprites/BallSprites/BattleBall.webp" id="3_2s25y"]
+[ext_resource type="FontFile" uid="uid://d3qgkvd507epq" path="res://Fonts/Anton-Regular.ttf" id="4_c42nr"]
+[ext_resource type="Texture2D" uid="uid://cgaq8ljsafxxd" path="res://Sprites/Spear.png" id="5_5sbwv"]
+[ext_resource type="AudioStream" uid="uid://cjroneiurjx6x" path="res://Sounds/SpearHit.mp3" id="6_5sbwv"]
+[ext_resource type="AudioStream" uid="uid://cvx77t6i6qe8g" path="res://Sounds/BallHitWall.mp3" id="7_p5yqp"]
+[ext_resource type="AudioStream" uid="uid://crr7t30a8stjd" path="res://Sounds/WeaponHitSound.mp3" id="8_qebag"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5sbwv"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pr6jr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qebag")
+}],
+"loop": true,
+"name": &"Damaged",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_2s25y")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rh4c0"]
+radius = 38.0132
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6crav"]
+radius = 39.0128
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_2s25y"]
+points = PackedVector2Array(20, -44, 43.6529, -53.6548, 55.6737, -57.1903, 53.6938, -43.8967, 42.0972, -16.7438, 30.925, -22.5421, -0.427067, 8.80996, -9.61945, -0.382433, 22.1568, -30.7445)
+
+[node name="SpearBall" type="RigidBody2D" groups=["Balls"]]
+mass = 0.2
+physics_material_override = SubResource("PhysicsMaterial_5sbwv")
+script = ExtResource("1_5sbwv")
+
+[node name="Ball" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(0.175, 0.175)
+sprite_frames = SubResource("SpriteFrames_pr6jr")
+animation = &"Normal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_rh4c0")
+
+[node name="ColisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ColisionDetector"]
+shape = SubResource("CircleShape2D_6crav")
+
+[node name="HP" type="Node2D" parent="."]
+scale = Vector2(0.1, 0.1)
+
+[node name="Label" type="Label" parent="HP"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -171.0
+offset_top = -204.5
+offset_right = 171.0
+offset_bottom = 204.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_c42nr")
+theme_override_font_sizes/font_size = 400
+text = "25"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="SpearWeaponDetector" type="Area2D" parent="." groups=["Weapon"]]
+scale = Vector2(1.3, 1)
+
+[node name="Spear" type="Sprite2D" parent="SpearWeaponDetector"]
+z_index = -1
+position = Vector2(-21.0069, -0.927597)
+rotation = 0.785398
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("5_5sbwv")
+offset = Vector2(742.707, -716.647)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpearWeaponDetector"]
+position = Vector2(34.9931, 2.0724)
+rotation = 0.785398
+shape = SubResource("ConvexPolygonShape2D_2s25y")
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_5sbwv")
+
+[node name="HitOtherBall" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_p5yqp")
+pitch_scale = 0.7
+
+[node name="ParrySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_qebag")
+pitch_scale = 1.25
+
+[connection signal="body_entered" from="ColisionDetector" to="." method="_on_colision_detector_body_entered"]
+[connection signal="area_entered" from="SpearWeaponDetector" to="." method="_on_spear_weapon_detector_area_entered"]
+[connection signal="body_entered" from="SpearWeaponDetector" to="." method="_on_spear_weapon_detector_body_entered"]

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dyrx730g6un7c"]
+
+[ext_resource type="Script" uid="uid://c2m3ldurxd70l" path="res://Balls/Projectiles/TurretBullet.gd" id="1_ohugf"]
+[ext_resource type="Texture2D" uid="uid://cxwms707gicx5" path="res://Sprites/Bullet.png" id="2_ohugf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pnymf"]
+radius = 7.0
+
+[node name="TurretBullet" type="Node2D"]
+script = ExtResource("1_ohugf")
+
+[node name="BulletSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.0151241, 0.0151241)
+texture = ExtResource("2_ohugf")
+region_enabled = true
+region_rect = Rect2(379.673, 19.5239, 945.3, 939.058)
+
+[node name="CollisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionDetector"]
+shape = SubResource("CircleShape2D_pnymf")
+
+[connection signal="body_entered" from="CollisionDetector" to="." method="_on_collision_detector_body_entered"]

@@ -1,0 +1,132 @@
+[gd_scene load_steps=14 format=3 uid="uid://5bf6o8d255vi"]
+
+[ext_resource type="Texture2D" uid="uid://c5mo5j6sgmqm0" path="res://Sprites/BallSprites/BallDamage.png" id="1_bfkw0"]
+[ext_resource type="Script" uid="uid://cmjqin30b705v" path="res://Balls/Code/BowBall.gd" id="1_c3i4f"]
+[ext_resource type="Texture2D" uid="uid://dd1yw36xyxbtg" path="res://Sprites/BallSprites/BattleBall.webp" id="3_c3i4f"]
+[ext_resource type="FontFile" uid="uid://d3qgkvd507epq" path="res://Fonts/Anton-Regular.ttf" id="3_rbdyy"]
+[ext_resource type="Texture2D" uid="uid://dh4tu5c6cxllx" path="res://Sprites/Bow.png" id="4_b617e"]
+[ext_resource type="AudioStream" uid="uid://dhffh71prbs2" path="res://Sounds/BowLaunch.mp3" id="5_k3x6u"]
+[ext_resource type="AudioStream" uid="uid://cvx77t6i6qe8g" path="res://Sounds/BallHitWall.mp3" id="6_r8les"]
+[ext_resource type="AudioStream" uid="uid://crr7t30a8stjd" path="res://Sounds/WeaponHitSound.mp3" id="7_v72mg"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ef5o4"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_frqit"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_bfkw0")
+}],
+"loop": true,
+"name": &"Damaged",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_c3i4f")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ueo7"]
+radius = 38.0132
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ef5o4"]
+radius = 39.0128
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ofnba"]
+size = Vector2(6.94789, 11.7632)
+
+[node name="BowBall" type="RigidBody2D" groups=["Balls"]]
+mass = 0.2
+physics_material_override = SubResource("PhysicsMaterial_ef5o4")
+lock_rotation = true
+script = ExtResource("1_c3i4f")
+
+[node name="Ball" type="AnimatedSprite2D" parent="."]
+z_index = 2
+position = Vector2(-1, 0)
+scale = Vector2(0.174854, 0.175)
+sprite_frames = SubResource("SpriteFrames_frqit")
+animation = &"Normal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2ueo7")
+
+[node name="ColisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ColisionDetector"]
+shape = SubResource("CircleShape2D_ef5o4")
+
+[node name="HP" type="Node2D" parent="."]
+z_index = 100
+scale = Vector2(0.1, 0.1)
+
+[node name="Label" type="Label" parent="HP"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -171.0
+offset_top = -204.5
+offset_right = 171.0
+offset_bottom = 204.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_rbdyy")
+theme_override_font_sizes/font_size = 400
+text = "25"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="BowWeaponDetector" type="Area2D" parent="." groups=["Weapon"]]
+
+[node name="Bow" type="Sprite2D" parent="BowWeaponDetector"]
+z_index = 5
+position = Vector2(-564, 545)
+scale = Vector2(0.792626, 0.791869)
+texture = ExtResource("4_b617e")
+offset = Vector2(742.707, -716.647)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BowWeaponDetector"]
+position = Vector2(29.25, -27.75)
+rotation = 0.785398
+scale = Vector2(8.44715, -2.16401)
+shape = SubResource("RectangleShape2D_ofnba")
+
+[node name="ArrowSpawnLocation" type="Marker2D" parent="BowWeaponDetector"]
+position = Vector2(29, -28)
+
+[node name="ArrowFacing" type="Marker2D" parent="BowWeaponDetector"]
+position = Vector2(44, -40)
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+volume_db = 7.5
+
+[node name="ShootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_k3x6u")
+
+[node name="HitOtherBall" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_r8les")
+pitch_scale = 0.7
+
+[node name="ParrySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_v72mg")
+pitch_scale = 1.25
+
+[node name="ArrowCooldown" type="Timer" parent="."]
+
+[node name="NextArrowCooldown" type="Timer" parent="."]
+
+[connection signal="area_entered" from="ColisionDetector" to="." method="_on_colision_detector_area_entered"]
+[connection signal="body_entered" from="ColisionDetector" to="." method="_on_colision_detector_body_entered"]
+[connection signal="area_entered" from="BowWeaponDetector" to="." method="_on_crossbow_weapon_detector_area_entered"]
+[connection signal="body_entered" from="BowWeaponDetector" to="." method="_on_crossbow_weapon_detector_body_entered"]
+[connection signal="timeout" from="ArrowCooldown" to="." method="_on_arrow_cooldown_timeout"]
+[connection signal="timeout" from="NextArrowCooldown" to="." method="_on_next_arrow_cooldown_timeout"]

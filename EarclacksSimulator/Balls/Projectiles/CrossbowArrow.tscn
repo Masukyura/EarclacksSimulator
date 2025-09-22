@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bb6de5s0y8bpx"]
+
+[ext_resource type="Script" uid="uid://0pe3muy5r4u7" path="res://Balls/Projectiles/CrossbowArrow.gd" id="1_htogn"]
+[ext_resource type="AudioStream" uid="uid://dryivciyd0w3x" path="res://Sounds/BowHit.mp3" id="2_81j8g"]
+[ext_resource type="Texture2D" uid="uid://rhd15jve1ynh" path="res://Sprites/CrossbowArrow.png" id="2_kq4aq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_htogn"]
+size = Vector2(20, 90)
+
+[node name="CrossbowArrow" type="Node2D"]
+script = ExtResource("1_htogn")
+
+[node name="Arrow" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(-1.90735e-06, 0)
+rotation = 0.785398
+scale = Vector2(1.16799, 1.16799)
+texture = ExtResource("2_kq4aq")
+
+[node name="ArrowCollision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ArrowCollision"]
+position = Vector2(1, -7.60198e-05)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_htogn")
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_81j8g")
+
+[connection signal="body_entered" from="ArrowCollision" to="." method="_on_arrow_collision_body_entered"]
